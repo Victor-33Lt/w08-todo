@@ -1,0 +1,95 @@
+body {
+  background:
+    radial-gradient(circle at 12% 15%, rgba(43, 108, 176, .12) 0 3px, transparent 4px),
+    linear-gradient(135deg, #f7f5ee 0 58%, #e9eef7 58% 100%);
+  background-size: 22px 22px, 100% 100%;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.todo-panel {
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 14px 14px 0 #d8d2bd;
+}
+
+.text-coral { color: #c84d35; }
+.text-indigo { color: #3454d1; }
+.bg-indigo { background-color: #3454d1; }
+.hover\:bg-indigo:hover { background-color: #3454d1; }
+.focus\:border-indigo:focus { border-color: #3454d1; }
+
+.filter-button {
+  position: relative;
+  min-height: 44px;
+  color: #64748b;
+  font-size: .875rem;
+  font-weight: 700;
+  transition: color .2s ease;
+}
+
+.filter-button::after {
+  position: absolute;
+  right: 25%;
+  bottom: -1px;
+  left: 25%;
+  height: 3px;
+  background: transparent;
+  content: "";
+}
+
+.filter-button:hover,
+.filter-button.active {
+  color: #0f172a;
+}
+
+.filter-button.active::after {
+  background: #3454d1;
+}
+
+.todo-item {
+  box-shadow: 3px 3px 0 #e2e8f0;
+}
+
+.todo-check {
+  accent-color: #3454d1;
+}
+
+.todo-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.todo-item.completed .todo-text {
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.delete-button {
+  color: #b53c2d;
+  background: #fff4f2;
+}
+
+.delete-button:hover,
+.delete-button:focus-visible {
+  color: #fff;
+  background: #b53c2d;
+  outline: none;
+}
+
+.empty-check {
+  width: 52px;
+  height: 52px;
+  color: #fff;
+  background: #3454d1;
+  border: 3px solid #0f172a;
+  border-radius: 50%;
+  font-size: 1.35rem;
+  box-shadow: 5px 5px 0 #d8d2bd;
+}
+
+@media (max-width: 420px) {
+  .todo-panel {
+    box-shadow: 7px 7px 0 #d8d2bd;
+  }
+}
