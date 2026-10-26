@@ -3,6 +3,8 @@
 const STORAGE_KEY = "todo-list-tailwind";
 const form = document.querySelector("#todo-form");
 const input = document.querySelector("#todo-input");
+const dueDateInput = document.querySelector("#todo-due-date");
+const priorityInput = document.querySelector("#todo-priority");
 const inputError = document.querySelector("#input-error");
 const list = document.querySelector("#todo-list");
 const template = document.querySelector("#todo-template");
@@ -24,7 +26,11 @@ function loadTodos() {
       (typeof todo.id === "string" || typeof todo.id === "number") &&
       typeof todo.text === "string" &&
       typeof todo.completed === "boolean"
-    );
+    ).map((todo) => ({
+      ...todo,
+      dueDate: typeof todo.dueDate === "string" ? todo.dueDate : "",
+      priority: ["high", "normal", "low"].includes(todo.priority) ? todo.priority : "normal"
+    }));
   } catch {
     return [];
   }
@@ -36,6 +42,18 @@ function saveTodos() {
   } catch {
     // App remains usable even when browser storage is unavailable.
   }
+}
+
+function formatDueDate(dateString) {
+  const [year, month, day] = dateString.split("-");
+  return `${year}.${month}.${day}`;
+}
+
+function isOverdue(todo) {
+  if (!todo.dueDate || todo.completed) return false;
+  const today = new Date();
+  const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  return todo.dueDate < todayString;
 }
 
 function getVisibleTodos() {
@@ -52,12 +70,28 @@ function render() {
     const item = template.content.firstElementChild.cloneNode(true);
     const checkbox = item.querySelector(".todo-check");
     const text = item.querySelector(".todo-text");
+    const meta = item.querySelector(".todo-meta");
 
     item.dataset.id = String(todo.id);
     item.classList.toggle("completed", todo.completed);
     checkbox.checked = todo.completed;
     checkbox.setAttribute("aria-label", `${todo.completed ? "완료 취소" : "완료"}: ${todo.text}`);
     text.textContent = todo.text;
+    meta.replaceChildren();
+
+    const priorityLabel = { high: "높음", normal: "보통", low: "낮음" }[todo.priority];
+    const priority = document.createElement("span");
+    priority.className = `priority-tag priority-${todo.priority}`;
+    priority.textContent = `우선순위 ${priorityLabel}`;
+    meta.append(priority);
+
+    if (todo.dueDate) {
+      const dueDate = document.createElement("span");
+      dueDate.className = `due-date${isOverdue(todo) ? " overdue" : ""}`;
+      dueDate.textContent = `마감 ${formatDueDate(todo.dueDate)}${isOverdue(todo) ? " · 기한 지남" : ""}`;
+      meta.append(dueDate);
+    }
+
     item.querySelector(".delete-button").setAttribute("aria-label", `할 일 삭제: ${todo.text}`);
     list.append(item);
   });
@@ -90,9 +124,13 @@ form.addEventListener("submit", (event) => {
   todos.unshift({
     id: `${Date.now()}-${crypto.randomUUID?.() ?? Math.random()}`,
     text,
-    completed: false
+    completed: false,
+    dueDate: dueDateInput.value,
+    priority: priorityInput.value
   });
   input.value = "";
+  dueDateInput.value = "";
+  priorityInput.value = "normal";
   saveTodos();
   render();
   input.focus();

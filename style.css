@@ -60,9 +60,43 @@ body {
   overflow-wrap: anywhere;
 }
 
+
 .todo-item.completed .todo-text {
   color: #94a3b8;
   text-decoration: line-through;
+}
+
+.todo-meta {
+  color: #64748b;
+}
+
+.priority-tag,
+.due-date {
+  border-radius: 999px;
+  padding: .15rem .5rem;
+}
+
+.priority-tag {
+  background: #eef2f7;
+}
+
+.priority-high {
+  color: #fff;
+  background: #b53c2d;
+}
+
+.priority-low {
+  color: #475569;
+  background: #e2e8f0;
+}
+
+.due-date {
+  background: #fff8e7;
+}
+
+.due-date.overdue {
+  color: #fff;
+  background: #b53c2d;
 }
 
 .delete-button {
